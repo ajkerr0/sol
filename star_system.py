@@ -14,7 +14,12 @@ class StarSystem:
     Args:
         pos (list-like): A list of lists of the positions of the planets, in AU's.
         vel (list-like): A list of lists of the initial velocities of the planets, in AU's/yr., indexed like pos.
-        mass (list-like): A list of the masses of the planets in the system, in earth masses, indexed like pos."""
+        mass (list-like): A list of the masses of the planets in the system, in earth masses, indexed like pos.
+        
+    Keywords:
+        force (str): String that selects the force interaction.
+        dt (float): The time step size in integration.
+        method(str): String that selects integration method."""
     
     def __init__(self, pos, mass, force="newton", dt=0.1, method="euler"):
         self.pos = np.array(pos)
