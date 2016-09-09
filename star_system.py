@@ -32,19 +32,26 @@ class StarSystem:
         self.pos += pos_step
         self.vel += vel_step
         
-    def calculate_force(self):
-        """Return the gradient of the star systems."""
+    def define_force_routine(self):
+        """A factory function that returns the function that calculates the gradient on the star system."""
         
-        grad = np.zeros((len(self.pos), 3))
         i, j = self.iacts[:,0], self.iacts[:,1]
         posij = self.pos[i] - self.pos[j]
         rij = np.linalg.norm(posij, axis=1)
         
         if self.force == "newton":
-            term = G*(self.mass[i]*self.mass[j]/(rij**3))[:,None]*posij
-            np.add.at(grad, i, term)
-            np.add.ad(grad, j, -term)
-            return grad
+            
+            def grad_newton():
+                grad = np.zeros((len(self.pos), 3))
+                newton = G*(self.mass[i]*self.mass[j]/(rij**3))[:,None]*posij
+                np.add.at(grad, i, newton)
+                np.add.ad(grad, j, -newton)
+                return grad
+                
+            self.calculate_force = grad_newton
+            
+        else:
+            raise ValueError("Invalid force")
         
     def _configure_interactions(self):
         """Assign the interactions in the star system."""
